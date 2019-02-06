@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<!-- @Copyright: F Holmstrom -->
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="description" content="Webcam Geneve Autoroute">
+	<meta name="keywords" content="trafic,geneve,autoroute,webcam,webcams">
+	<meta name="author" content="F Holmstrom">    
+    <link rel="icon" type="image/png" href="car.png" />
+	
+	<!-- Angular -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.7.5/angular.min.js"></script> 
+	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+	
+	<!-- Materialize -->    	
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+	
+	<!-- Google Icon Font  -->
+	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">	
+	
+    <style>
+        header{position:absolute}
+		.nav-bar{margin-right:auto;margin-left:auto;width:100%;top:0;position:fixed;z-index:8;background:#4d94ff;overflow:hidden;color:white;backface-visibility:hidden;height:40px;padding-top:5px}
+        .touchable{-webkit-tap-highlight-color:transparent}
+        .nav-mobile-buttons{float:right!important;margin-top:auto;margin-bottom: auto}
+        .nav-mobile-buttons span{margin-left:7px;font-size:23px;color:#e3e3e3}
+        .pull-left{float:left!important}
+        .container {margin-top:50px;}
+
+        @media(max-width:767px){
+          .header-slogan{font-size:1.1em;margin-left:2%;margin-top:3px}
+          .card-title {font-size: 1.1em!important;margin-bottom: 0!important;padding-bottom: 5px!important;text-shadow: 1px 1px 8px #000;}
+          .nav-logo i{height:28px;margin-left:10px}
+          .nav-mobile-buttons{margin-right:10px}
+          }
+
+        @media(min-width:768px){
+          .header-slogan{font-size:1.3em;margin-left:2%;margin-top:1px}
+          .card-title {font-size: 1.3em!important;margin-bottom: 0!important;padding-bottom: 15px!important;text-shadow: 1px 1px 8px #000;}
+          .nav-logo i{height:40px;margin-left:5%}
+          .nav-logo{margin-left:5%}
+          .nav-mobile-buttons{margin-right:5%}
+          }               		        
+    </style>
+</head>
+<body onload="material()">
+	<!-- Navigation Menu -->
+	<div ng-app="myApp" ng-controller="webcamCtrl"> 
+		<div class="nav-wrapper light-blue">
+			<ul id="slide-out" class="sidenav">			
+				<li><a class="subheader">Autoroute Contournement</a></li>
+					<li><a class="waves-effect sidenav-close" href="" onclick="material()" ng-click="myDir = 'a';myAutoroute='Contournement';myDirection='France'">France</a></li>
+					<li><a class="waves-effect sidenav-close" href="" ng-click="myDir = 'b';myAutoroute='Contournement';myDirection='Aeroport'">Aeroport</a></li>
+				<li><div class="divider"></div></li>
+				<li><a class="subheader">Autoroute Center</a></li>
+					<li><a class="waves-effect sidenav-close" href="" ng-click="myDir = 'c';myAutoroute='Centre';myDirection='France'">France</a></li>
+					<li><a class="waves-effect sidenav-close" href="" ng-click="myDir = 'd';myAutoroute='Centre';myDirection='Centre'">Centre</a></li>
+				<li><div class="divider"></div></li>
+				<li><a href="" class="sidenav-close" ng-click="loadData()"><i class="material-icons">refresh</i>Reload</a></li>
+			</ul>
+		</div>	
+        
+		<!-- Navigation bar -->
+        <header class="nav-bar z-depth-2">
+            <div class="nav-logo pull-left">
+                <a href="#" data-target="slide-out" class="sidenav-trigger"><i class="small material-icons white-text">menu</i></a>                
+            </div>           
+            <span class="header-slogan pull-left">{{myAutoroute}} direction {{myDirection}}</span>            
+            <div class="nav-mobile-buttons">                
+                <span href="" class="touchable white-text"><i class="small material-icons white-text">directions_car</i></span>
+            </div>
+        </header>
+		        			        
+		<!-- Data -->
+		<div class="container">	
+		
+			<!-- Contournement -->
+				<!-- Direction Normal -->
+				<div class="row" ng-show="myDir == 'a'">		
+                    <div class="col s6 m4 l3" ng-repeat="webcam in webcams | orderBy : 'Order'">
+                        <div class="card">                                            
+                            <div class="card-image materialboxed">
+                                <img class="responsive-img" data-caption="{{webcam.Name}}" src="http://160.53.186.13/generated/CAM_{{webcam.WebcamDir}}.jpg"/>
+                                <span class="card-title">{{webcam.Name}}</span>		
+                            </div> 
+                        </div>				
+                    </div>
+				</div>
+				<!-- Direction Inverse -->
+				<div class="row" ng-show="myDir == 'b'">
+					<div class="col s6 m4 l3" ng-repeat="webcam in webcams | orderBy : '-Order'">
+                        <div class="card">                                            
+                            <div class="card-image materialboxed">
+								<img class="responsive-img" data-caption="{{webcam.Name}}" src="http://160.53.186.13/generated/CAM_{{webcam.WebcamDirI}}.jpg"/>
+								<p class="card-title">{{webcam.Name}}</p>
+							</div>
+						</div>
+					</div>
+				</div>
+				
+			<!-- Centre -->
+				<!-- Direction Normal -->
+				<div class="row" ng-show="myDir == 'c'">
+					<div class="col s6 m4 l3" ng-repeat="webcam in webcamsCentre | orderBy : 'Order'">
+						<div class="card">
+							<div class="card-image materialboxed" >
+								<img class="responsive-img" data-caption="{{webcam.Name}}" src="http://160.53.186.13/generated/CAM_{{webcam.WebcamDir}}.jpg"/>
+								<p class="card-title">{{webcam.Name}}</p>
+							</div>
+						</div>
+					</div>
+				</div>
+				<!-- Direction Inverse -->
+				<div  class="row" ng-show="myDir == 'd'">
+					<div class="col s6 m4 l3" ng-repeat="webcam in webcamsCentre | orderBy : '-Order'">
+						<div class="card">
+							<div class="card-image materialboxed">
+								<img class="responsive-img" data-caption="{{webcam.Name}}" src="http://160.53.186.13/generated/CAM_{{webcam.WebcamDirI}}.jpg"/>
+								<p class="card-title">{{webcam.Name}}</p>
+							</div>
+						</div>
+					</div>
+				</div>
+		</div>
+	</div>
+
+	<script>
+		function material(){
+			$('.materialboxed').materialbox();
+		}
+	
+		// Data loading
+		var app = angular.module('myApp', []);
+		app.controller('webcamCtrl', function($scope, $http) {
+			// Get list of webcams
+			$scope.loadData = function () {
+				$http.get("webcams.php")
+				.then(function (response) {$scope.webcams = response.data.webcamsAll;});
+				
+				$http.get("webcamsC.php")
+				.then(function (response) {$scope.webcamsCentre = response.data.webcamsCentreAll;});
+				
+				$('.materialboxed').materialbox();
+			}
+			// Initial load
+			$scope.loadData();
+			
+			// Params for Title
+			$scope.myDir = 'a';
+			$scope.myAutoroute = 'Contournement';
+			$scope.myDirection = 'France';
+			
+			// Initialization
+			angular.element(document).ready(function () {
+				$('.sidenav').sidenav();
+				$('.materialboxed').materialbox();
+			});
+		});
+		
+		$( document ).ready(function(){
+			$('.materialboxed').materialbox();
+		});
+	</script>
+</body>
+</html> 
+<!-- Inspiration:
+- http://ge.ch/infomobilite/
+- http://cbge.com/autoroute1.html
+- http://benjamin.ohresser.free.fr
+- http://www.webcam-autoroute.eu/fr/cam%C3%A9ras/gen-ve
+-->
