@@ -7,10 +7,11 @@
 	<meta name="keywords" content="trafic,geneve,autoroute,webcam,webcams,traffic">
 	<meta name="author" content="F Holmstrom">    
     <link rel="icon" type="image/png" href="car.png" />
+	<title>Webcams Geneva</title>
 	
 	<!-- Angular -->
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.7.5/angular.min.js"></script> 
-	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.8.2/angular.min.js"></script> 
+	<script src="https://code.jquery.com/jquery-3.7.1.slim.min.js"></script>
 	
 	<!-- Materialize -->    	
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
@@ -43,28 +44,31 @@
           .nav-mobile-buttons{margin-right:5%}
           }               		        
     </style>
+	
+	<script async>
+		setTimeout(function() { material(); }, 1000);			
+	</script>
 </head>
-<body onload="material()">
-	<!-- Navigation Menu -->
+<body>	
+	<!-- Angular App -->
 	<div ng-app="myApp" ng-controller="webcamCtrl"> 
-		<div class="nav-wrapper light-blue">
+		<!-- Navigation Menu -->
+		<div class="nav-wrapper">
 			<ul id="slide-out" class="sidenav">			
 				<li><a class="subheader">Autoroute Contournement</a></li>
-					<li><a class="waves-effect sidenav-close" href="" onclick="material()" ng-click="myDir = 'a';myAutoroute='Contournement';myDirection='France'">France</a></li>
+					<li><a class="waves-effect sidenav-close" href="" ng-click="myDir = 'a';myAutoroute='Contournement';myDirection='France'">France</a></li>
 					<li><a class="waves-effect sidenav-close" href="" ng-click="myDir = 'b';myAutoroute='Contournement';myDirection='Aeroport'">Aeroport</a></li>
 				<li><div class="divider"></div></li>
 				<li><a class="subheader">Autoroute Center</a></li>
 					<li><a class="waves-effect sidenav-close" href="" ng-click="myDir = 'c';myAutoroute='Centre';myDirection='France'">France</a></li>
 					<li><a class="waves-effect sidenav-close" href="" ng-click="myDir = 'd';myAutoroute='Centre';myDirection='Centre'">Centre</a></li>
-				<li><div class="divider"></div></li>
-				<li><a href="" class="sidenav-close" ng-click="loadData()"><i class="material-icons">refresh</i>Reload</a></li>
 			</ul>
 		</div>	
         
 		<!-- Navigation bar -->
         <header class="nav-bar z-depth-2">
             <div class="nav-logo pull-left">
-                <a href="#" data-target="slide-out" class="sidenav-trigger"><i class="small material-icons white-text">menu</i></a>                
+                <a href="" data-target="slide-out" class="sidenav-trigger"><i class="small material-icons white-text">menu</i></a>                
             </div>           
             <span class="header-slogan pull-left">{{myAutoroute}} direction {{myDirection}}</span>            
             <div class="nav-mobile-buttons">                
@@ -72,16 +76,15 @@
             </div>
         </header>
 		        			        
-		<!-- Data -->
-		<div class="container">	
-		
+		<!-- Data loading setup -->
+		<div class="container">			
 			<!-- Contournement -->
 				<!-- Direction Normal -->
 				<div class="row" ng-show="myDir == 'a'">		
                     <div class="col s6 m4 l3" ng-repeat="webcam in webcams | orderBy : 'Order'">
                         <div class="card">                                            
                             <div class="card-image materialboxed">
-                                <img class="responsive-img" data-caption="{{webcam.Name}}" src="http://160.53.186.13/generated/CAM_{{webcam.WebcamDir}}.jpg"/>
+                                <img class="responsive-img" data-caption="{{webcam.Name}}" ng-src="https://ge.ch/cameras/CAM_{{webcam.WebcamDir}}.jpg"/>
                                 <span class="card-title">{{webcam.Name}}</span>		
                             </div> 
                         </div>				
@@ -92,7 +95,7 @@
 					<div class="col s6 m4 l3" ng-repeat="webcam in webcams | orderBy : '-Order'">
                         <div class="card">                                            
                             <div class="card-image materialboxed">
-								<img class="responsive-img" data-caption="{{webcam.Name}}" src="http://160.53.186.13/generated/CAM_{{webcam.WebcamDirI}}.jpg"/>
+								<img class="responsive-img" data-caption="{{webcam.Name}}" ng-src="https://ge.ch/cameras/CAM_{{webcam.WebcamDirI}}.jpg"/>
 								<p class="card-title">{{webcam.Name}}</p>
 							</div>
 						</div>
@@ -103,9 +106,9 @@
 				<!-- Direction Normal -->
 				<div class="row" ng-show="myDir == 'c'">
 					<div class="col s6 m4 l3" ng-repeat="webcam in webcamsCentre | orderBy : 'Order'">
-						<div class="card">
+						<div class="card material-placeholder">
 							<div class="card-image materialboxed" >
-								<img class="responsive-img" data-caption="{{webcam.Name}}" src="http://160.53.186.13/generated/CAM_{{webcam.WebcamDir}}.jpg"/>
+								<img class="responsive-img" data-caption="{{webcam.Name}}" ng-src="https://ge.ch/cameras/CAM_{{webcam.WebcamDir}}.jpg"/>
 								<p class="card-title">{{webcam.Name}}</p>
 							</div>
 						</div>
@@ -116,7 +119,7 @@
 					<div class="col s6 m4 l3" ng-repeat="webcam in webcamsCentre | orderBy : '-Order'">
 						<div class="card">
 							<div class="card-image materialboxed">
-								<img class="responsive-img" data-caption="{{webcam.Name}}" src="http://160.53.186.13/generated/CAM_{{webcam.WebcamDirI}}.jpg"/>
+								<img class="responsive-img" data-caption="{{webcam.Name}}" ng-src="https://ge.ch/cameras/CAM_{{webcam.WebcamDirI}}.jpg"/>
 								<p class="card-title">{{webcam.Name}}</p>
 							</div>
 						</div>
@@ -125,24 +128,19 @@
 		</div>
 	</div>
 
-	<script>
-		function material(){
-			$('.materialboxed').materialbox();
-		}
-	
+	<script>			
 		// Data loading
 		var app = angular.module('myApp', []);
 		app.controller('webcamCtrl', function($scope, $http) {
-			// Get list of webcams
+			// Get list of webcams function
 			$scope.loadData = function () {
 				$http.get("webcams.php")
 				.then(function (response) {$scope.webcams = response.data.webcamsAll;});
 				
 				$http.get("webcamsC.php")
-				.then(function (response) {$scope.webcamsCentre = response.data.webcamsCentreAll;});
-				
-				$('.materialboxed').materialbox();
-			}
+				.then(function (response) {$scope.webcamsCentre = response.data.webcamsCentreAll;});				
+			};	
+						
 			// Initial load
 			$scope.loadData();
 			
@@ -151,17 +149,21 @@
 			$scope.myAutoroute = 'Contournement';
 			$scope.myDirection = 'France';
 			
-			// Initialization
+			// Initialization after load
 			angular.element(document).ready(function () {
-				$('.sidenav').sidenav();
-				$('.materialboxed').materialbox();
+				M.AutoInit();		
+				//$('.sidenav').sidenav();
+				//$('.materialboxed').materialbox();
 			});
 		});
 		
-		$( document ).ready(function(){
+		// Material initialization function
+		function material(){			
 			$('.materialboxed').materialbox();
-		});
+		};					
 	</script>
+	
+	
 </body>
 </html> 
 <!-- Inspiration:
