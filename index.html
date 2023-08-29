@@ -56,12 +56,12 @@
 		<div class="nav-wrapper">
 			<ul id="slide-out" class="sidenav">			
 				<li><a class="subheader">Autoroute Contournement</a></li>
-					<li><a class="waves-effect sidenav-close" href="" ng-click="myDir = 'a';myAutoroute='Contournement';myDirection='France'">France</a></li>
-					<li><a class="waves-effect sidenav-close" href="" ng-click="myDir = 'b';myAutoroute='Contournement';myDirection='Aeroport'">Aeroport</a></li>
+					<li><a class="waves-effect sidenav-close" href="#Contour-France" ng-click="myDir = 'Contour-France';myAutoroute='Contournement';myDirection='France'">France</a></li>
+					<li><a class="waves-effect sidenav-close" href="#Contour-Aeroport" ng-click="myDir = 'Contour-Aeroport';myAutoroute='Contournement';myDirection='Aeroport'">Aeroport</a></li>
 				<li><div class="divider"></div></li>
 				<li><a class="subheader">Autoroute Center</a></li>
-					<li><a class="waves-effect sidenav-close" href="" ng-click="myDir = 'c';myAutoroute='Centre';myDirection='France'">France</a></li>
-					<li><a class="waves-effect sidenav-close" href="" ng-click="myDir = 'd';myAutoroute='Centre';myDirection='Centre'">Centre</a></li>
+					<li><a class="waves-effect sidenav-close" href="#Centre-France" ng-click="myDir = 'Centre-France';myAutoroute='Centre';myDirection='France'">France</a></li>
+					<li><a class="waves-effect sidenav-close" href="#Centre-Centre" ng-click="myDir = 'Centre-Centre';myAutoroute='Centre';myDirection='Centre'">Centre</a></li>
 			</ul>
 		</div>	
         
@@ -70,7 +70,7 @@
             <div class="nav-logo pull-left">
                 <a href="" data-target="slide-out" class="sidenav-trigger"><i class="small material-icons white-text">menu</i></a>                
             </div>           
-            <span class="header-slogan pull-left">{{myAutoroute}} direction {{myDirection}}</span>            
+            <span class="header-slogan pull-left">Autoroute {{myAutoroute}} direction {{myDirection}}</span>            
             <div class="nav-mobile-buttons">                
                 <span href="" class="touchable white-text"><i class="small material-icons white-text">directions_car</i></span>
             </div>
@@ -80,7 +80,7 @@
 		<div class="container">			
 			<!-- Contournement -->
 				<!-- Direction Normal -->
-				<div class="row" ng-show="myDir == 'a'">		
+				<div class="row" ng-show="myDir == 'Contour-France'">		
                     <div class="col s6 m4 l3" ng-repeat="webcam in webcams | orderBy : 'Order'">
                         <div class="card">                                            
                             <div class="card-image materialboxed">
@@ -91,7 +91,7 @@
                     </div>
 				</div>
 				<!-- Direction Inverse -->
-				<div class="row" ng-show="myDir == 'b'">
+				<div class="row" ng-show="myDir == 'Contour-Aeroport'">
 					<div class="col s6 m4 l3" ng-repeat="webcam in webcams | orderBy : '-Order'">
                         <div class="card">                                            
                             <div class="card-image materialboxed">
@@ -104,7 +104,7 @@
 				
 			<!-- Centre -->
 				<!-- Direction Normal -->
-				<div class="row" ng-show="myDir == 'c'">
+				<div class="row" ng-show="myDir == 'Centre-France'">
 					<div class="col s6 m4 l3" ng-repeat="webcam in webcamsCentre | orderBy : 'Order'">
 						<div class="card material-placeholder">
 							<div class="card-image materialboxed" >
@@ -115,7 +115,7 @@
 					</div>
 				</div>
 				<!-- Direction Inverse -->
-				<div  class="row" ng-show="myDir == 'd'">
+				<div  class="row" ng-show="myDir == 'Centre-Centre'">
 					<div class="col s6 m4 l3" ng-repeat="webcam in webcamsCentre | orderBy : '-Order'">
 						<div class="card">
 							<div class="card-image materialboxed">
@@ -128,12 +128,15 @@
 		</div>
 	</div>
 
-	<script>			
+	<script>		
+		// Import
+		//import { ActivatedRoute } from '@angular/router';
+	
 		// Data loading
 		var app = angular.module('myApp', []);
 		app.controller('webcamCtrl', function($scope, $http) {
-			// Get list of webcams function
-			$scope.loadData = function () {
+			// Get list of webcams from the php file
+			$scope.loadData = function () {			
 				$http.get("webcams.php")
 				.then(function (response) {$scope.webcams = response.data.webcamsAll;});
 				
@@ -141,19 +144,36 @@
 				.then(function (response) {$scope.webcamsCentre = response.data.webcamsCentreAll;});				
 			};	
 						
+			
+			// Get URL # Value to know the direction
+			var hash = $(location).prop('hash').slice(1);;
+			if(hash != ''){
+				$scope.myDir = hash;
+				
+				// Params for Title						
+				var titles = $scope.myDir.split('-');
+				if(titles[0] == 'Contour')
+					$scope.myAutoroute = 'Contournement'; 			
+				else
+					$scope.myAutoroute = 'Centre';
+				
+				if(titles[1] == 'France')
+					$scope.myDirection = 'France'; 			
+				else
+					$scope.myDirection = 'Aeroport'; 
+			}
+			else{
+				$scope.myDir = 'Contour-France'; //default if none in URL						
+				$scope.myAutoroute = 'Contournement'; //default if none in URL
+				$scope.myDirection = 'France'; //default if none in URL
+			}														
+			
 			// Initial load
 			$scope.loadData();
 			
-			// Params for Title
-			$scope.myDir = 'a';
-			$scope.myAutoroute = 'Contournement';
-			$scope.myDirection = 'France';
-			
 			// Initialization after load
-			angular.element(document).ready(function () {
-				M.AutoInit();		
-				//$('.sidenav').sidenav();
-				//$('.materialboxed').materialbox();
+			angular.element(document).ready(function () {			
+				M.AutoInit();						
 			});
 		});
 		
